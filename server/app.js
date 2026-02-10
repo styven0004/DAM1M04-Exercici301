@@ -15,60 +15,52 @@ app.use((req, res, next) => {
   next();
 });
 
-// Continguts estàtics (carpeta public)
-app.use(express.static('public'))
+// Continguts estàtics
+app.use(express.static('public'));
 
 // Handlebars
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'hbs');
 
-// Registrar "Helpers .hbs" aquí
-hbs.registerHelper('gt', (a, b) => a > b);
+// ✅ Helper OBLIGATORI
+hbs.registerHelper('lte', (a, b) => a <= b);
 
-// Partials de Handlebars
+// Partials
 hbs.registerPartials(path.join(__dirname, 'views', 'partials'));
 
-// Route
+// Utilitat per llegir JSON
+const loadJSON = (file) =>
+  JSON.parse(fs.readFileSync(path.join(__dirname, 'data', file), 'utf8'));
+
+// =======================
+// Ruta /
+// =======================
 app.get('/', (req, res) => {
-  const common = JSON.parse(
-    fs.readFileSync(path.join(__dirname, 'data', 'common.json'), 'utf8')
-  );
+  const site = loadJSON('site.json');
 
-  data = {
-    common: common
-  }
-
-  res.render('index', data);
+  res.render('index', site);
 });
 
-app.get('/cities', (req, res) => {
+// =======================
+// Ruta /informe
+// =======================
+app.get('/informe', (req, res) => {
+  const site = loadJSON('site.json');
+  const cities = loadJSON('cities.json');
+  const countries = loadJSON('countries.json');
 
-  // Legim els fitxers JSON
-  const common = JSON.parse(
-    fs.readFileSync(path.join(__dirname, 'data', 'common.json'), 'utf8')
-  );
-  const cities = JSON.parse(
-    fs.readFileSync(path.join(__dirname, 'data', 'cities.json'), 'utf8')
-  );
-  const countries = JSON.parse(
-    fs.readFileSync(path.join(__dirname, 'data', 'countries.json'), 'utf8')
-  );
-
-  // Preparem les dades per a la plantilla
-  data = {
-    common: common,
+  res.render('informe', {
+    ...site,
     cities: cities.cities,
-    countries: countries.countries
-  }
-
-  // Renderitza la plantilla cities.hbs
-  res.render('cities', data);
+    countries: countries.countries,
+    limit: 800000
+  });
 });
 
 // Start server
 const httpServer = app.listen(port, () => {
   console.log(`http://localhost:${port}`);
-  console.log(`http://localhost:${port}/cities`);
+  console.log(`http://localhost:${port}/informe`);
 });
 
 // Graceful shutdown
