@@ -1,0 +1,41 @@
+body {
+  font-family: Arial, Helvetica, sans-serif;
+  margin: 20px;
+  background: #f7f7f7;
+}
+
+nav a {
+  margin-right: 15px;
+  text-decoration: none;
+  font-weight: bold;
+  color: #333;
+}
+
+.warning {
+  background: #ffe3e3;
+  padding: 10px;
+  border-left: 5px solid red;
+}
+
+.badge {
+  padding: 3px 6px;
+  margin-left: 5px;
+  border-radius: 4px;
+  font-size: 0.8em;
+}
+
+.coastal {
+  background: #cceeff;
+}
+
+.interior {
+  background: #eee;
+}
+
+.small {
+  background: #c8e6c9;
+}
+
+.large {
+  background: #ffcdd2;
+}
